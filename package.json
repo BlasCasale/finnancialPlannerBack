@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "cd finnancialPlannerUserService && npm run build && npm run start",
+    "dev": "cd finnancialPlannerPlanningService && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

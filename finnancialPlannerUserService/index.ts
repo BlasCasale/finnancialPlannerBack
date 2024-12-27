@@ -1,11 +1,15 @@
 import { server } from './src/server'
 import { db } from './src/db/db'
-const PORT = process.loadEnvFile('.env')
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const PORT = process.env.PORT
 
 server.listen(PORT, async () => {
   try {
     await db.sync({ alter: true })
-    console.log(`Escuchando en el puerto ${PORT}`)
+    console.log(`Escuchando en el puerto http://localhost:${PORT}`)
   } catch (error) {
     console.log(error)
   }

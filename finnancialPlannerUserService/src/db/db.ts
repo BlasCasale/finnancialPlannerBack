@@ -1,5 +1,9 @@
 import { Sequelize } from 'sequelize'
-const DB_DATA = process.loadEnvFile('.env')
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const DB_DATA = process.env.DB_DATA
 
 export const db = new Sequelize(
   `${DB_DATA}`,
@@ -7,11 +11,16 @@ export const db = new Sequelize(
 )
 
 const connectToDatabase = async () => {
-  try {
-    await db.authenticate()
-    console.log('BDD conectada')
-  } catch (error) {
-    console.log(error)
+  let tries = 0
+  while (tries !== 0) {
+    try {
+      await db.authenticate()
+      console.log('BDD conectada')
+    } catch (error) {
+      tries--
+      console.log(`Quedan ${tries} para la BDD`)
+      console.log(error)
+    }
   }
 }
 
