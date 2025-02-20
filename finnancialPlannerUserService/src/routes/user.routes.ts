@@ -1,7 +1,11 @@
 import { Router } from 'express'
 import { getUserByUsernameHandler } from '../handler/getUserByUsernameHandler'
-import { validatePasswordQuery, validateUserNameQuery } from '../middleware/middlewareUser'
+import { validateMailBody, validatePasswordBody, validatePasswordQuery, validateUserNameBody, validateUserNameQuery } from '../middleware/middlewareUser'
+import { createUserHandler } from '../handler/createUserHandler'
 
 export const userRouter = Router()
 
-userRouter.get('/', [validatePasswordQuery, validateUserNameQuery], getUserByUsernameHandler)
+userRouter.get('/getByUsername', [validatePasswordQuery, validateUserNameQuery], getUserByUsernameHandler)
+userRouter.post('/createUser', [validatePasswordBody, validateMailBody, validateUserNameBody], createUserHandler)
+
+export default userRouter

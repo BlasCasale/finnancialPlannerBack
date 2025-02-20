@@ -1,7 +1,8 @@
 export interface UserType {
-  id?: string
+  id: string
+  username: string
   mail: string
   password: string
   isVerified: boolean
-  token?: string
+  verificationToken?: string
 }

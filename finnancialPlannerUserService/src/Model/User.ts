@@ -1,7 +1,7 @@
-import { Sequelize, DataTypes } from 'sequelize'
+import { Sequelize, DataTypes, Model } from 'sequelize'
 
 export const UserFunc = (db: Sequelize) => {
-  return db.define('User', {
+  return db.define<Model>('User', {
     id: {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
