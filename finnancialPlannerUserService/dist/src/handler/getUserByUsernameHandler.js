@@ -8,21 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const server_1 = require("./src/server");
-const db_1 = require("./src/db/db");
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-const PORT = process.env.PORT;
-server_1.server.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
+exports.getUserByUsernameHandler = void 0;
+const getUserByUsername_1 = require("../controller/getUserByUsername");
+const getUserByUsernameHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield db_1.db.sync({ alter: true });
-        console.log(`Escuchando en el puerto http://localhost:${PORT}, servidor de usuarios`);
+        const username = req.query.username;
+        const password = req.query.password;
+        const user = yield (0, getUserByUsername_1.getUserByUsername)(username, password);
+        res.json(user);
     }
     catch (error) {
-        console.log(error);
+        if (error instanceof Error)
+            res.json({ error: error.message });
+        else
+            console.log('Ocurrió un error inesperado');
     }
-}));
+});
+exports.getUserByUsernameHandler = getUserByUsernameHandler;

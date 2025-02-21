@@ -1,4 +1,4 @@
-import * as nodemailer from 'nodemailer'
+import { UserType } from '../types'
 import { validationMail } from '../utils/templates'
 import dotenv from 'dotenv'
 
@@ -6,29 +6,47 @@ dotenv.config()
 
 const variables = {
   mail: process.env.MAIL_ACCOUNT,
+  apiKey: process.env.API_KEY,
   pass: process.env.MAIL_PASS,
-  host: process.env.MAIL_HOST
+  mailHost: process.env.MAIL_HOST
 }
 
-console.log(variables)
+const loadFetch = async () => {
+  // Importa dinámicamente node-fetch
+  const { default: fetch, Headers } = await import('node-fetch')
+  return { fetch, Headers }
+}
 
-const transporter = nodemailer.createTransport({
-  host: variables.host,
-  port: 587,
-  secure: false,
-  auth: {
-    user: variables.mail,
-    pass: variables.pass
+export const sendMail = async (user: UserType) => {
+  try {
+    console.log('Sending mail to:', user.mail)
+
+    // Cargar fetch y Headers dinámicamente
+    const { fetch, Headers } = await loadFetch()
+
+    const headers = new Headers({
+      Authorization: `Bearer ${variables.apiKey}`,
+      'Content-Type': 'application/json'
+    })
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        from: 'onboarding@resend.dev',
+        to: [user.mail],
+        subject: 'Validacion para la creación de la cuenta.',
+        html: validationMail(user.id)
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error(`Error sending mail: ${response.statusText}`)
+    }
+
+    console.log('Mail sent successfully')
+  } catch (error) {
+    await user.destroy()
+    console.error('Error sending mail:', error)
   }
-})
-
-export const sendMail = (id: string, mail: string): void => {
-  const template = validationMail(id)
-
-  transporter.sendMail({
-    from: variables.mail,
-    to: mail,
-    subject: 'Validación de cuenta para tu gestor de finanzas',
-    html: template
-  })
 }

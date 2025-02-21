@@ -22,7 +22,7 @@ export const UserFunc = (db: Sequelize) => {
     },
     password: {
       allowNull: false,
-      type: DataTypes.STRING(70)
+      type: DataTypes.STRING(90)
     },
     isVerified: {
       type: DataTypes.BOOLEAN,
