@@ -11,11 +11,12 @@ export const db = new Sequelize(
 )
 
 const connectToDatabase = async () => {
-  let tries = 0
+  let tries = 5
   while (tries !== 0) {
     try {
       await db.authenticate()
       console.log('BDD conectada')
+      tries = 0
     } catch (error) {
       tries--
       console.log(`Quedan ${tries} para la BDD`)

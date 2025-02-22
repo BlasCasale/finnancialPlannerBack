@@ -12,24 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.db = void 0;
-const sequelize_1 = require("sequelize");
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-const DB_DATA = process.env.DB_DATA;
-exports.db = new sequelize_1.Sequelize(`${DB_DATA}`, { logging: false });
-const connectToDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
-    let tries = 0;
-    while (tries !== 0) {
-        try {
-            yield exports.db.authenticate();
-            console.log('BDD conectada');
-        }
-        catch (error) {
-            tries--;
-            console.log(`Quedan ${tries} para la BDD`);
-            console.log(error);
-        }
-    }
+exports.createUser = void 0;
+const modeling_1 = require("../db/modeling");
+const crypto_1 = __importDefault(require("crypto"));
+const createUser = (_a) => __awaiter(void 0, [_a], void 0, function* ({ mail, username, password }) {
+    const findUsername = yield modeling_1.User.findOne({ where: { username } });
+    if (findUsername)
+        throw new Error(`Ya existe un usuario con este nombre de usuario ${username}`);
+    const findMail = yield modeling_1.User.findOne({ where: { mail } });
+    if (findMail)
+        throw new Error(`Ya existe un usuario con este mail: ${mail}`);
+    const hashedPass = crypto_1.default.createHash('sha256').update(password).digest('hex');
+    const user = yield modeling_1.User.create({ mail, username, password: hashedPass });
+    return user;
 });
-connectToDatabase();
+exports.createUser = createUser;

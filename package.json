@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "cd finnancialPlannerUserService && npm run build && npm run start",
-    "dev": "cd finnancialPlannerUserService && npm run dev"
+    "dev": "concurrently --raw \"cd finnancialPlannerUserService && npm run dev\""
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

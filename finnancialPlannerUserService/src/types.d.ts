@@ -5,4 +5,6 @@ export interface UserType {
   password: string
   isVerified: boolean
   verificationToken?: string
+  destroy: () => Promise<void>
+  update: () => Promise<void>
 }
