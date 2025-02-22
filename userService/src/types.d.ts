@@ -6,5 +6,5 @@ export interface UserType {
   isVerified: boolean
   verificationToken?: string
   destroy: () => Promise<void>
-  update: () => Promise<void>
+  update: (data: unknown, where: unknown) => Promise<void>
 }
