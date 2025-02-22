@@ -9,6 +9,5 @@ export const getUserByUsernameHandler = async (req: Request, res: Response): Pro
     res.json(user)
   } catch (error) {
     if (error instanceof Error) res.json({ error: error.message })
-    else console.log('Ocurrió un error inesperado')
   }
 }

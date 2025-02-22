@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express'
 import { mailRegex, nameRegex, passRegex, uuidRegex } from '../utils/regExp'
 
-export const validateId = (req: Request, _res: Response, next: NextFunction): void => {
+export const validateIdBody = (req: Request, _res: Response, next: NextFunction): void => {
   const { id } = req.body
 
   if (!id) throw new Error('Se debe enviar un ID para continuar.')
@@ -13,6 +13,17 @@ export const validateId = (req: Request, _res: Response, next: NextFunction): vo
   next()
 }
 
+export const validateIdQuery = (req: Request, _res: Response, next: NextFunction): void => {
+  const id = req.query.id as string
+
+  if (!id) throw new Error('Se debe enviar un ID para continuar.')
+
+  if (typeof id !== 'string') throw new Error('Se debe enviar un dato de tipo string en ID para poder continuar.')
+
+  if (!uuidRegex.test(id)) throw new Error('El ID enviado no cumple con el formato UUID.')
+
+  next()
+}
 export const validateUserNameQuery = (req: Request, _res: Response, next: NextFunction): void => {
   const { username } = req.query
 
