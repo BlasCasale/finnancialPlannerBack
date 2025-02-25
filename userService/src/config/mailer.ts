@@ -1,5 +1,4 @@
 import { UserType } from '../types'
-import { validationMail } from '../utils/templates'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -8,7 +7,8 @@ const variables = {
   mail: process.env.MAIL_ACCOUNT,
   apiKey: process.env.API_KEY,
   pass: process.env.MAIL_PASS,
-  mailHost: process.env.MAIL_HOST
+  mailHost: process.env.MAIL_HOST,
+  secretToken: process.env.SECRET_TOKEN || 'defaultExpression'
 }
 
 const loadFetch = async () => {
@@ -17,10 +17,8 @@ const loadFetch = async () => {
   return { fetch, Headers }
 }
 
-export const sendMail = async (user: UserType) => {
+export const sendMail = async (user: UserType, template: string, subject: string) => {
   try {
-    console.log('Sending mail to:', user.mail)
-
     // Cargar fetch y Headers dinámicamente
     const { fetch, Headers } = await loadFetch()
 
@@ -35,16 +33,14 @@ export const sendMail = async (user: UserType) => {
       body: JSON.stringify({
         from: 'onboarding@resend.dev',
         to: [user.mail],
-        subject: 'Validacion para la creación de la cuenta.',
-        html: validationMail(user.id)
+        subject,
+        html: template
       })
     })
 
     if (!response.ok) {
       throw new Error(`Error sending mail: ${response.statusText}`)
     }
-
-    console.log('Mail sent successfully')
   } catch (error) {
     await user.destroy()
     console.error('Error sending mail:', error)
