@@ -28,10 +28,6 @@ export const UserFunc = (db: Sequelize) => {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
-    },
-    verificationToken: {
-      type: DataTypes.STRING,
-      allowNull: true
     }
   }, {
     timestamps: false
